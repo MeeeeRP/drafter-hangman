@@ -329,9 +329,9 @@ jobs:
               if: ${{ !cancelled() }}
               run: |
                   printf '\n## Build Log\n' >> ./docs/dashboard.md
-                  echo '```' >> ./docs/dashboard.md
+                  printf '```' >> ./docs/dashboard.md
                   cat ./dist/_build_log.txt >> ./docs/dashboard.md
-                  echo '\n```\n' >> ./docs/dashboard.md
+                  printf '\n```\n' >> ./docs/dashboard.md
                   printf 'Build log added to dashboard. Preparing to generate final HTML and deploy!' >> ./docs/dashboard.md
             # Regardless of anything else, generate the HTML from the Markdown files
             - name: Generate HTML from Markdown in Docs/
