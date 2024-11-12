@@ -303,7 +303,7 @@ jobs:
                   if [ -s ./dist/_ERRORS.txt ]; then
                       touch ./dist/_ERRORS_HEADER.md
                       printf '# Dashboard\n\n## Error During Build!\n\n!!! failure\n    There was an error during your build. Details are below:\n\n```\n' > ./dist/_ERRORS_HEADER.md
-                      printf '```\n' >> ./dist/_ERRORS.txt
+                      printf '\n```\n' >> ./dist/_ERRORS.txt
                       cat ./dist/_ERRORS_HEADER.md ./dist/_ERRORS.txt ./docs/dashboard.md > ./dist/tmp.md
                       mv ./dist/tmp.md ./docs/dashboard.md
                       printf 'Errors found during build. They were prepended to dashboard.\n' >> ./dist/_build_log.txt
@@ -312,7 +312,7 @@ jobs:
                     if [ -s ./dist/_WARNINGS.txt ]; then
                         touch ./dist/_WARNINGS_HEADER.md
                         printf '# Dashboard\n\n## Warning During Build!\n\n!!! warning\n    There was one or more warnings during your build. Details are below:\n\n```\n' > ./dist/_WARNINGS_HEADER.md
-                        printf '```\n' >> ./dist/_WARNINGS.txt
+                        printf '\n```\n' >> ./dist/_WARNINGS.txt
                         cat ./dist/_WARNINGS_HEADER.md ./dist/_WARNINGS.txt ./docs/dashboard.md > ./dist/tmp.md
                         mv ./dist/tmp.md ./docs/dashboard.md
                         printf 'Warnings found during build. They were prepended to dashboard.\n' >> ./dist/_build_log.txt
@@ -331,7 +331,7 @@ jobs:
                   printf '\n## Build Log\n' >> ./docs/dashboard.md
                   echo '```' >> ./docs/dashboard.md
                   cat ./dist/_build_log.txt >> ./docs/dashboard.md
-                  echo '```' >> ./docs/dashboard.md
+                  echo '\n```\n' >> ./docs/dashboard.md
                   printf 'Build log added to dashboard. Preparing to generate final HTML and deploy!' >> ./docs/dashboard.md
             # Regardless of anything else, generate the HTML from the Markdown files
             - name: Generate HTML from Markdown in Docs/
