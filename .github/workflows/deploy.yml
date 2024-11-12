@@ -254,7 +254,7 @@ jobs:
               run: |
                   echo "<html><body><pre>" > ./dist/vulture.html
                   : # Not yet comfortable with mypy, so running it in a continue-on-error mode and not failing the build
-                  python -m vulture website/main.py |& tee -a ./dist/_build_log.txt ./dist/vulture.html
+                  python -m vulture website/main.py --ignore-decorators @route |& tee -a ./dist/_build_log.txt ./dist/vulture.html
                   echo "</pre></body></html>" >> ./dist/vulture.html
                   echo '* [Vulture](../vulture.html): The results of running Vulture on your code. This looks for variables, functions, and class fields that might be unused after being declared. Take it with a grain of salt and look over the code yourself before you trust what it says! ' >> docs/dashboard.md
 
