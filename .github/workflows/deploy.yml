@@ -302,7 +302,7 @@ jobs:
                   : # If the ./dist/_ERRORS.txt file is not empty, then prepend it to the dashboard
                   if [ -s ./dist/_ERRORS.txt ]; then
                       touch ./dist/_ERRORS_HEADER.md
-                      printf '# Dashboard\n\n## Error During Build!\n\n!!! failure\n    There was an error during your build. Details are below:\n\n```' > ./dist/_ERRORS_HEADER.md
+                      printf '# Dashboard\n\n## Error During Build!\n\n!!! failure\n    There was an error during your build. Details are below:\n\n```\n' > ./dist/_ERRORS_HEADER.md
                       printf '```\n' >> ./dist/_ERRORS.txt
                       cat ./dist/_ERRORS_HEADER.md ./dist/_ERRORS.txt ./docs/dashboard.md > ./dist/tmp.md
                       mv ./dist/tmp.md ./docs/dashboard.md
@@ -311,7 +311,7 @@ jobs:
                     : # If the ./dist/_WARNINGS.txt file is not empty, then prepend it to the dashboard
                     if [ -s ./dist/_WARNINGS.txt ]; then
                         touch ./dist/_WARNINGS_HEADER.md
-                        printf '# Dashboard\n\n## Warning During Build!\n\n!!! warning\n    There was one or more warnings during your build. Details are below:\n\n```' > ./dist/_WARNINGS_HEADER.md
+                        printf '# Dashboard\n\n## Warning During Build!\n\n!!! warning\n    There was one or more warnings during your build. Details are below:\n\n```\n' > ./dist/_WARNINGS_HEADER.md
                         printf '```\n' >> ./dist/_WARNINGS.txt
                         cat ./dist/_WARNINGS_HEADER.md ./dist/_WARNINGS.txt ./docs/dashboard.md > ./dist/tmp.md
                         mv ./dist/tmp.md ./docs/dashboard.md
