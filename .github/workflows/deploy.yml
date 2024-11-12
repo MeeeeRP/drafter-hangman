@@ -201,7 +201,7 @@ jobs:
               id: dependencies
               run: |
                   echo "<html><body><pre>" > ./dist/installation.html
-                  python -m pip install coverage drafter bakery pylint mypy matplotlib pillow coverage pymarkdownlnt 2> >(tee ./dist/_ERRORS.txt) |& tee -a ./dist/installation.html
+                  python -m pip install coverage drafter bakery pylint mypy matplotlib pillow coverage pymarkdownlnt vulture 2> >(tee ./dist/_ERRORS.txt) |& tee -a ./dist/installation.html
                   : # Install students' requirements.txt file if it is present
                   if [ -f website/requirements.txt ]; then
                       python -m pip install -r website/requirements.txt 2> >(tee ./dist/_ERRORS.txt) |& tee -a ./dist/installation.html
@@ -248,6 +248,17 @@ jobs:
                   echo '* [Type](../type.html): The results of running a *typechecker* (`MyPy`) on your code. This is a sophisticated piece of software that can identify type issues. However, you should take it with a grain of salt, since it may raise issues that are outside of the scope of this course. ' >> docs/dashboard.md
 
                   printf 'Successfully ran type checker\n' >> ./dist/_build_log.txt
+            - name: Create Vulture report
+              id: vulture
+              continue-on-error: true
+              run: |
+                  echo "<html><body><pre>" > ./dist/vulture.html
+                  : # Not yet comfortable with mypy, so running it in a continue-on-error mode and not failing the build
+                  python -m vulture website/main.py |& tee -a ./dist/_build_log.txt ./dist/vulture.html
+                  echo "</pre></body></html>" >> ./dist/vulture.html
+                  echo '* [Vulture](../vulture.html): The results of running Vulture on your code. This looks for variables, functions, and class fields that might be unused after being declared. Take it with a grain of salt and look over the code yourself before you trust what it says! ' >> docs/dashboard.md
+
+                  printf 'Successfully ran Vulture\n' >> ./dist/_build_log.txt
             - name: Create integrity report
               if: ${{ !cancelled() }}
               id: integrity
