@@ -1,26 +1,23 @@
 # Website Name
 
-Replace this text with your website name.
+Hangman!!!
 
 ## Description
 
-Replace this with a description of what your website does.
+This is my rendition of the classic game hangman. The words are a little out there.
 
 ## Author
 
-* **Name**: Replace this with your name.
-* **Email**: Replace this with your @udel.edu email address.
+* **Name**: Maya :)
+* **Email**: MayaRP@udel.edu
 
 ## Help Resources Used
 
-If you got significant help from a website besides the official Drafter 
-documentation, include links along with explanations of how the site 
-helped you. If someone helped you, this is also a nice place to mention 
-them to thank them for their help.
+The words I am using are from https://github.com/RazorSh4rk/random-word-api. Thank you :)
 
 ## Planning Documents
 
-Link to [Planning Document](Replace this text here in the parentheses with the full filename of your planning document, with the extension)
+Link to [Planning Document](hangman-planning.pdf)
 
 ## Video URL
 
