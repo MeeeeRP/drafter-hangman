@@ -57,7 +57,7 @@ def home(state: State) -> Page:
     """
     guesses_str = make_str(state.guesses)
     progress_str = make_str(state.progress)
-    image_path = '/images_folder/'+image_list[state.lives]
+    image_path = image_list[state.lives]
     
     return Page(state, [
         "Let's play Hangman!!",
@@ -133,7 +133,7 @@ def loss(state: State) -> Page:
     return Page(state, [
         "The word was "+str(state.word),
         progress_str,
-        change_margin(float_right(change_height(Image('/images_folder/rightleg.png'), '300px')), '0px 200px'),
+        change_margin(float_right(change_height(Image('rightleg.png'), '300px')), '0px 200px'),
         change_width(change_height(change_border(Div(Header("Guesses:", 6), guesses_str), 'solid'), '300px'), '40%'), #, {'style_border': 'solid'}
         SelectBox('mode', ['Easy', 'Intermediate', 'Hard']),
         Button("Play Again!", play_game),
