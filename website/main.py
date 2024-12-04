@@ -143,7 +143,7 @@ def loss(state: State) -> Page:
 @route
 def win(state: State) -> Page:
     guesses_str = make_str(state.guesses)
-    image_path = '/images_folder/'+image_list[state.lives]
+    image_path = image_list[state.lives]
 
     state.streak = True
     state.total_plays+=1
