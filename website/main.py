@@ -47,13 +47,13 @@ def make_str(this_list: list[str]) -> str:
 
 def get_word(mode: str) -> str:
     if mode == "Easy":
-        easy_num = random.randint(0,13981)
+        easy_num = random.randint(0,len(easy)-1)
         word = easy[easy_num].upper()
     elif mode == "Intermediate":
-        med_num = random.randint(0,69352)
+        med_num = random.randint(0,len(medium)-1)
         word = medium[med_num].upper()
     elif mode == "Hard":
-        hard_num = random.randint(0, 94851)
+        hard_num = random.randint(0, len(hard)-1)
         word = hard[hard_num].upper()
     else:
         return 'error'
