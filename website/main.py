@@ -44,7 +44,7 @@ def get_lists(state: State, mode: str) -> list[str]:
     words = [w.strip(' "') for w in response.text.split(',')]
     if mode=='Easy':
         easy = [word for word in words if len(word)<=5]
-        print('easy assigned')
+        print('easy assigned: '+str(len(easy)))
         return easy
     elif mode == 'Intermediate':
         medium = [word for word in words if len(word)>5 and len(word)<=8]
