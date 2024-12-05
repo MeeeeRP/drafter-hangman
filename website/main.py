@@ -5,16 +5,6 @@ import requests
 #from word_list import easy, medium, hard
 import random
 
-response = requests.get('https://raw.githubusercontent.com/RazorSh4rk/random-word-api/refs/heads/master/words.json')
-
-words = [w.strip(' "') for w in response.text.split(',')]
-
-easy = [word for word in words if len(word)<=5]
-
-medium = [word for word in words if len(word)>5 and len(word)<=8]
-
-hard = [word for word in words if len(word)>8]
-
 hide_debug_information()
 set_website_title("Hangman!!!")
 set_website_framed(False)
@@ -37,6 +27,10 @@ class State:
     streak: bool
     total_plays: int
     mode: str
+    words_per_mode: list[str]
+#    easy: list[str]
+#    medium: list[str]
+#    hard: list[str]
 
 
 def make_str(this_list: list[str]) -> str:
@@ -45,16 +39,30 @@ def make_str(this_list: list[str]) -> str:
         this_str+=item+" "
     return this_str
 
-def get_word(mode: str) -> str:
+def get_lists(state: State, mode: str) -> list[str]:
+    response = requests.get('https://raw.githubusercontent.com/RazorSh4rk/random-word-api/refs/heads/master/words.json')
+    words = [w.strip(' "') for w in response.text.split(',')]
+    if mode=='Easy':
+        easy = [word for word in words if len(word)<=5]
+        print('easy assigned')
+        return easy
+    if mode == 'Intermediate':
+        medium = [word for word in words if len(word)>5 and len(word)<=8]
+        return medium
+    if mode == 'Hard':
+        hard = [word for word in words if len(word)>8]
+        return hard
+    
+def get_word(state: State, mode: str) -> str:
     if mode == "Easy":
-        easy_num = random.randint(0,len(easy)-1)
-        word = easy[easy_num].upper()
+        easy_num = random.randint(0,13981)
+        word = state.words_per_mode[easy_num].upper()
     elif mode == "Intermediate":
-        med_num = random.randint(0,len(medium)-1)
-        word = medium[med_num].upper()
+        med_num = random.randint(0,69352)
+        word = state.words_per_mode[med_num].upper()
     elif mode == "Hard":
-        hard_num = random.randint(0, len(hard)-1)
-        word = hard[hard_num].upper()
+        hard_num = random.randint(0, 94851)
+        word = state.words_per_mode[hard_num].upper()
     else:
         return 'error'
     return word
@@ -64,6 +72,7 @@ def home(state: State) -> Page:
     """
     Displays hangman image, guesses, and progress
     """
+    state.words_per_mode = []
     guesses_str = make_str(state.guesses)
     progress_str = make_str(state.progress)
     image_path = image_list[state.lives]
@@ -80,10 +89,12 @@ def home(state: State) -> Page:
 
 @route
 def play_game(state: State, mode:str) -> Page:
+    print('play_game run')
     state.mode=mode
     state.lives = 7
     state.guesses = []
-    state.word = get_word(state.mode)
+    state.words_per_mode = get_lists(state, mode)
+    state.word = get_word(state, mode)
     state.progress = []
     for letter in state.word:
         state.progress.append('_')
@@ -96,7 +107,6 @@ def index(state: State) -> Page:
     Splash screen
     """
     return Page(state, [
-        
         change_width(SelectBox('mode', ['Easy', 'Intermediate', 'Hard']), '10%'),
         float_right(change_background_color(change_width(Button("Play Game!", play_game), '80%'), 'white')),
         change_width(Image('splash_screen.jpg'), '100%')
@@ -184,4 +194,4 @@ def statistics(state: State, mode: str) -> Page:
         content[2] = "You have won, "+str(state.wins)+" game"
     return Page(state, content)
 
-start_server(State(7, [], "", [], 0, False, 0, ''))
+start_server(State(7, [], "", [], 0, False, 0, '', []))
