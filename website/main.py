@@ -46,14 +46,18 @@ def get_lists(state: State, mode: str) -> list[str]:
         easy = [word for word in words if len(word)<=5]
         print('easy assigned')
         return easy
-    if mode == 'Intermediate':
+    elif mode == 'Intermediate':
         medium = [word for word in words if len(word)>5 and len(word)<=8]
         return medium
-    if mode == 'Hard':
+    elif mode == 'Hard':
         hard = [word for word in words if len(word)>8]
         return hard
+    else:
+        return ["error"]
     
 def get_word(state: State, mode: str) -> str:
+    if not state.words_per_mode:
+        return 'empty'
     if mode == "Easy":
         easy_num = random.randint(0,13981)
         word = state.words_per_mode[easy_num].upper()
@@ -72,7 +76,6 @@ def home(state: State) -> Page:
     """
     Displays hangman image, guesses, and progress
     """
-    state.words_per_mode = []
     guesses_str = make_str(state.guesses)
     progress_str = make_str(state.progress)
     image_path = image_list[state.lives]
@@ -95,9 +98,11 @@ def play_game(state: State, mode:str) -> Page:
     state.guesses = []
     state.words_per_mode = get_lists(state, mode)
     state.word = get_word(state, mode)
+    print(state.word)
     state.progress = []
     for letter in state.word:
         state.progress.append('_')
+    state.words_per_mode = []
     return home(state)
 
 
