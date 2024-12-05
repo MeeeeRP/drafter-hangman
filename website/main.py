@@ -2,9 +2,18 @@ from bakery import assert_equal
 from drafter import *
 from dataclasses import dataclass
 import requests
-from word_list import easy, medium, hard
+#from word_list import easy, medium, hard
 import random
 
+response = requests.get('https://raw.githubusercontent.com/RazorSh4rk/random-word-api/refs/heads/master/words.json')
+
+words = [w.strip(' "') for w in response.text.split(',')]
+
+easy = [word for word in words if len(word)<=5]
+
+medium = [word for word in words if len(word)>5 and len(word)<=8]
+
+hard = [word for word in words if len(word)>8]
 
 hide_debug_information()
 set_website_title("Hangman!!!")
@@ -13,7 +22,7 @@ set_website_framed(False)
 
 add_website_css("""
 body {
-    background-color: lightblue;
+    background-color: #99D9EA;
 }
 """)
 image_list = ['rightleg.png', 'leftleg.png', 'back.png', 'rightarm.png', 'leftarm.png', 'neck.png', 'head.png', 'empty.png']
@@ -65,7 +74,7 @@ def home(state: State) -> Page:
         change_margin(float_right(change_height(Image(image_path), '300px')), '0px 200px'),
         change_width(change_height(change_border(Div(Header("Guesses:", 6), guesses_str), 'solid'), '300px'), '40%'), #, {'style_border': 'solid'}
         TextBox('guess'),
-        Button("Submit", make_guess),
+        change_background_color(Button("Submit", make_guess), 'white')
     ])
 
 
@@ -87,9 +96,10 @@ def index(state: State) -> Page:
     Splash screen
     """
     return Page(state, [
-        Image('temp_splash_screen.jpg'),
-        SelectBox('mode', ['Easy', 'Intermediate', 'Hard']),
-        Button("Play Game!", play_game)
+        
+        change_width(SelectBox('mode', ['Easy', 'Intermediate', 'Hard']), '10%'),
+        float_right(change_background_color(change_width(Button("Play Game!", play_game), '80%'), 'white')),
+        change_width(Image('splash_screen.jpg'), '100%')
         ])
 
 
@@ -136,8 +146,8 @@ def loss(state: State) -> Page:
         change_margin(float_right(change_height(Image('rightleg.png'), '300px')), '0px 200px'),
         change_width(change_height(change_border(Div(Header("Guesses:", 6), guesses_str), 'solid'), '300px'), '40%'), #, {'style_border': 'solid'}
         SelectBox('mode', ['Easy', 'Intermediate', 'Hard']),
-        Button("Play Again!", play_game),
-        Button("Statistics", statistics)
+        change_background_color(Button("Play Again!", play_game), 'white'),
+        change_background_color(Button("Statistics", statistics), 'white')
     ])
 
 @route
@@ -154,8 +164,8 @@ def win(state: State) -> Page:
         change_margin(float_right(change_height(Image(image_path), '300px')), '0px 200px'),
         change_width(change_height(change_border(Div(Header("Guesses:", 6), guesses_str), 'solid'), '300px'), '40%'), #, {'style_border': 'solid'}
         SelectBox('mode', ['Easy', 'Intermediate', 'Hard']),
-        Button("Play Again!", play_game),
-        Button("Statistics", statistics)
+        change_background_color(Button("Play Again!", play_game), 'white'),
+        change_background_color(Button("Statistics", statistics), 'white')
     ])
 
 @route
@@ -164,7 +174,7 @@ def statistics(state: State, mode: str) -> Page:
                "You have played "+str(state.total_plays)+" games",
                "You have won, "+str(state.wins)+" games",
                 SelectBox('mode', ['Easy', 'Intermediate', 'Hard']),
-               Button("Play Again!", play_game)
+               change_background_color(Button("Play Again!", play_game), 'white')
               ]
     if state.streak:
         content[0] = "You are on a roll!"
