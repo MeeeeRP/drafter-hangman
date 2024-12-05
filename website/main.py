@@ -41,6 +41,7 @@ def make_str(this_list: list[str]) -> str:
 
 def get_lists(state: State, mode: str) -> list[str]:
     response = requests.get('https://raw.githubusercontent.com/RazorSh4rk/random-word-api/refs/heads/master/words.json')
+    print(len(response))
     words = [w.strip(' "') for w in response.text.split(',')]
     if mode=='Easy':
         easy = [word for word in words if len(word)<=5]
