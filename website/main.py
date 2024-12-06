@@ -1,11 +1,9 @@
 from bakery import assert_equal
 from drafter import *
 from dataclasses import dataclass
-#import requests
-#from word_list import easy, medium, hard
 import random
 
-hide_debug_information()
+#hide_debug_information()
 set_website_title("Hangman!!!")
 set_website_framed(False)
 
@@ -28,9 +26,6 @@ class State:
     total_plays: int
     mode: str
     words_per_mode: list[str]
-#    easy: list[str]
-#    medium: list[str]
-#    hard: list[str]
 
 
 def make_str(this_list: list[str]) -> str:
@@ -40,10 +35,9 @@ def make_str(this_list: list[str]) -> str:
     return this_str
 
 def get_lists(state: State, mode: str) -> list[str]:
-    #response = requests.get('https://raw.githubusercontent.com/RazorSh4rk/random-word-api/refs/heads/master/words.json')
-    #print(str(len(response.text))+" "+response.text)
     words_file = open('words.txt')
     words = [w.strip(' "') for w in words_file.read().split(',')]
+    words_file.close()
     if mode=='Easy':
         easy = [word for word in words if len(word)<=5]
         print('easy assigned: '+str(len(easy)))
@@ -202,3 +196,631 @@ def statistics(state: State, mode: str) -> Page:
     return Page(state, content)
 
 start_server(State(7, [], "", [], 0, False, 0, '', []))
+
+assert_equal(
+ make_guess(State(lives=6, guesses=['A', 'E', 'I', 'O', 'S', 'M', 'P'], word='IMPOSTER', progress=['I', 'M', 'P', 'O', 'S', '_', 'E', '_'], wins=1, streak=False, total_plays=2, mode='Intermediate', words_per_mode=[]), 'b'),
+ Page(state=State(lives=5,
+                 guesses=['A', 'E', 'I', 'O', 'S', 'M', 'P', 'B'],
+                 word='IMPOSTER',
+                 progress=['I', 'M', 'P', 'O', 'S', '_', 'E', '_'],
+                 wins=1,
+                 streak=False,
+                 total_plays=2,
+                 mode='Intermediate',
+                 words_per_mode=[]),
+     content=["Let's play Hangman!!",
+              ,
+              Image(url='neck.png', width=None, height=None),
+              Div(Header(body='Guesses:', level=6), 'A E I O S M P B ', {'style_border': 'solid', 'style_height': '300px', 'style_width': '40%'}),
+              TextBox(name='guess', kind='text', default_value=''),
+              Button(text='Submit', url='/make_guess')]))
+
+assert_equal(
+ make_guess(State(lives=4, guesses=['I', 'N', 'G', 'K', 'A', 'T', 'B', 'P'], word='KVETCHING', progress=['K', '_', '_', 'T', '_', '_', 'I', 'N', 'G'], wins=1, streak=True, total_plays=1, mode='Hard', words_per_mode=[]), 'p'),
+ Page(state=State(lives=4,
+                 guesses=['I', 'N', 'G', 'K', 'A', 'T', 'B', 'P'],
+                 word='KVETCHING',
+                 progress=['K', '_', '_', 'T', '_', '_', 'I', 'N', 'G'],
+                 wins=1,
+                 streak=True,
+                 total_plays=1,
+                 mode='Hard',
+                 words_per_mode=[]),
+     content=["Let's play Hangman!!",
+              ,
+              Image(url='leftarm.png', width=None, height=None),
+              Div(Header(body='Guesses:', level=6), 'I N G K A T B P ', {'style_border': 'solid', 'style_height': '300px', 'style_width': '40%'}),
+              TextBox(name='guess', kind='text', default_value=''),
+              Button(text='Submit', url='/make_guess')]))
+
+assert_equal(
+ make_guess(State(lives=7, guesses=['A', 'B', 'I'], word='BIAS', progress=['B', 'I', 'A', '_'], wins=0, streak=False, total_plays=0, mode='Easy', words_per_mode=[]), 's'),
+ Page(state=State(lives=7,
+                 guesses=['A', 'B', 'I', 'S'],
+                 word='BIAS',
+                 progress=['B', 'I', 'A', 'S'],
+                 wins=1,
+                 streak=True,
+                 total_plays=1,
+                 mode='Easy',
+                 words_per_mode=[]),
+     content=['Congrats! You guessed the word:',
+              ,
+              Image(url='empty.png', width=None, height=None),
+              Div(Header(body='Guesses:', level=6), 'A B I S ', {'style_border': 'solid', 'style_height': '300px', 'style_width': '40%'}),
+              SelectBox(name='mode', options=['Easy', 'Intermediate', 'Hard'], default_value=''),
+              Button(text='Play Again!', url='/play_game'),
+              Button(text='Statistics', url='/statistics')]))
+
+assert_equal(
+ play_game(State(lives=7, guesses=[], word='', progress=[], wins=0, streak=False, total_plays=0, mode='', words_per_mode=[]), 'Easy'),
+ Page(state=State(lives=7,
+                 guesses=[],
+                 word='BIAS',
+                 progress=['_', '_', '_', '_'],
+                 wins=0,
+                 streak=False,
+                 total_plays=0,
+                 mode='Easy',
+                 words_per_mode=[]),
+     content=["Let's play Hangman!!",
+              ,
+              Image(url='empty.png', width=None, height=None),
+              Div(Header(body='Guesses:', level=6), '', {'style_border': 'solid', 'style_height': '300px', 'style_width': '40%'}),
+              TextBox(name='guess', kind='text', default_value=''),
+              Button(text='Submit', url='/make_guess')]))
+
+assert_equal(
+ make_guess(State(lives=7, guesses=['A', 'B'], word='BIAS', progress=['B', '_', 'A', '_'], wins=0, streak=False, total_plays=0, mode='Easy', words_per_mode=[]), 'i'),
+ Page(state=State(lives=7,
+                 guesses=['A', 'B', 'I'],
+                 word='BIAS',
+                 progress=['B', 'I', 'A', '_'],
+                 wins=0,
+                 streak=False,
+                 total_plays=0,
+                 mode='Easy',
+                 words_per_mode=[]),
+     content=["Let's play Hangman!!",
+              ,
+              Image(url='empty.png', width=None, height=None),
+              Div(Header(body='Guesses:', level=6), 'A B I ', {'style_border': 'solid', 'style_height': '300px', 'style_width': '40%'}),
+              TextBox(name='guess', kind='text', default_value=''),
+              Button(text='Submit', url='/make_guess')]))
+
+assert_equal(
+ play_game(State(lives=0, guesses=['I', 'N', 'G', 'K', 'A', 'T', 'B', 'P', 'S', 'L', 'W', 'Q'], word='KVETCHING', progress=['K', '_', '_', 'T', '_', '_', 'I', 'N', 'G'], wins=1, streak=False, total_plays=2, mode='Hard', words_per_mode=[]), 'Intermediate'),
+ Page(state=State(lives=7,
+                 guesses=[],
+                 word='IMPOSTER',
+                 progress=['_', '_', '_', '_', '_', '_', '_', '_'],
+                 wins=1,
+                 streak=False,
+                 total_plays=2,
+                 mode='Intermediate',
+                 words_per_mode=[]),
+     content=["Let's play Hangman!!",
+              ,
+              Image(url='empty.png', width=None, height=None),
+              Div(Header(body='Guesses:', level=6), '', {'style_border': 'solid', 'style_height': '300px', 'style_width': '40%'}),
+              TextBox(name='guess', kind='text', default_value=''),
+              Button(text='Submit', url='/make_guess')]))
+
+assert_equal(
+ statistics(State(lives=0, guesses=['I', 'N', 'G', 'K', 'A', 'T', 'B', 'P', 'S', 'L', 'W', 'Q'], word='KVETCHING', progress=['K', '_', '_', 'T', '_', '_', 'I', 'N', 'G'], wins=1, streak=False, total_plays=2, mode='Hard', words_per_mode=[]), 'Easy'),
+ Page(state=State(lives=0,
+                 guesses=['I', 'N', 'G', 'K', 'A', 'T', 'B', 'P', 'S', 'L', 'W', 'Q'],
+                 word='KVETCHING',
+                 progress=['K', '_', '_', 'T', '_', '_', 'I', 'N', 'G'],
+                 wins=1,
+                 streak=False,
+                 total_plays=2,
+                 mode='Hard',
+                 words_per_mode=[]),
+     content=['Play again to improve your score',
+              'You have played 2 games',
+              'You have won, 1 game',
+              SelectBox(name='mode', options=['Easy', 'Intermediate', 'Hard'], default_value=''),
+              Button(text='Play Again!', url='/play_game')]))
+
+assert_equal(
+ make_guess(State(lives=6, guesses=['A', 'E', 'I'], word='IMPOSTER', progress=['I', '_', '_', '_', '_', '_', 'E', '_'], wins=1, streak=False, total_plays=2, mode='Intermediate', words_per_mode=[]), 'o'),
+ Page(state=State(lives=6,
+                 guesses=['A', 'E', 'I', 'O'],
+                 word='IMPOSTER',
+                 progress=['I', '_', '_', 'O', '_', '_', 'E', '_'],
+                 wins=1,
+                 streak=False,
+                 total_plays=2,
+                 mode='Intermediate',
+                 words_per_mode=[]),
+     content=["Let's play Hangman!!",
+              ,
+              Image(url='head.png', width=None, height=None),
+              Div(Header(body='Guesses:', level=6), 'A E I O ', {'style_border': 'solid', 'style_height': '300px', 'style_width': '40%'}),
+              TextBox(name='guess', kind='text', default_value=''),
+              Button(text='Submit', url='/make_guess')]))
+
+assert_equal(
+ make_guess(State(lives=7, guesses=['I', 'N', 'G'], word='KVETCHING', progress=['_', '_', '_', '_', '_', '_', 'I', 'N', 'G'], wins=1, streak=True, total_plays=1, mode='Hard', words_per_mode=[]), 'k'),
+ Page(state=State(lives=7,
+                 guesses=['I', 'N', 'G', 'K'],
+                 word='KVETCHING',
+                 progress=['K', '_', '_', '_', '_', '_', 'I', 'N', 'G'],
+                 wins=1,
+                 streak=True,
+                 total_plays=1,
+                 mode='Hard',
+                 words_per_mode=[]),
+     content=["Let's play Hangman!!",
+              ,
+              Image(url='empty.png', width=None, height=None),
+              Div(Header(body='Guesses:', level=6), 'I N G K ', {'style_border': 'solid', 'style_height': '300px', 'style_width': '40%'}),
+              TextBox(name='guess', kind='text', default_value=''),
+              Button(text='Submit', url='/make_guess')]))
+
+assert_equal(
+ make_guess(State(lives=3, guesses=['I', 'N', 'G', 'K', 'A', 'T', 'B', 'P', 'S'], word='KVETCHING', progress=['K', '_', '_', 'T', '_', '_', 'I', 'N', 'G'], wins=1, streak=True, total_plays=1, mode='Hard', words_per_mode=[]), 'l'),
+ Page(state=State(lives=2,
+                 guesses=['I', 'N', 'G', 'K', 'A', 'T', 'B', 'P', 'S', 'L'],
+                 word='KVETCHING',
+                 progress=['K', '_', '_', 'T', '_', '_', 'I', 'N', 'G'],
+                 wins=1,
+                 streak=True,
+                 total_plays=1,
+                 mode='Hard',
+                 words_per_mode=[]),
+     content=["Let's play Hangman!!",
+              ,
+              Image(url='back.png', width=None, height=None),
+              Div(Header(body='Guesses:', level=6), 'I N G K A T B P S L ', {'style_border': 'solid', 'style_height': '300px', 'style_width': '40%'}),
+              TextBox(name='guess', kind='text', default_value=''),
+              Button(text='Submit', url='/make_guess')]))
+
+assert_equal(
+ make_guess(State(lives=7, guesses=['I'], word='KVETCHING', progress=['_', '_', '_', '_', '_', '_', 'I', '_', '_'], wins=1, streak=True, total_plays=1, mode='Hard', words_per_mode=[]), 'n'),
+ Page(state=State(lives=7,
+                 guesses=['I', 'N'],
+                 word='KVETCHING',
+                 progress=['_', '_', '_', '_', '_', '_', 'I', 'N', '_'],
+                 wins=1,
+                 streak=True,
+                 total_plays=1,
+                 mode='Hard',
+                 words_per_mode=[]),
+     content=["Let's play Hangman!!",
+              ,
+              Image(url='empty.png', width=None, height=None),
+              Div(Header(body='Guesses:', level=6), 'I N ', {'style_border': 'solid', 'style_height': '300px', 'style_width': '40%'}),
+              TextBox(name='guess', kind='text', default_value=''),
+              Button(text='Submit', url='/make_guess')]))
+
+assert_equal(
+ make_guess(State(lives=6, guesses=['I', 'N', 'G', 'K', 'A'], word='KVETCHING', progress=['K', '_', '_', '_', '_', '_', 'I', 'N', 'G'], wins=1, streak=True, total_plays=1, mode='Hard', words_per_mode=[]), 't'),
+ Page(state=State(lives=6,
+                 guesses=['I', 'N', 'G', 'K', 'A', 'T'],
+                 word='KVETCHING',
+                 progress=['K', '_', '_', 'T', '_', '_', 'I', 'N', 'G'],
+                 wins=1,
+                 streak=True,
+                 total_plays=1,
+                 mode='Hard',
+                 words_per_mode=[]),
+     content=["Let's play Hangman!!",
+              ,
+              Image(url='head.png', width=None, height=None),
+              Div(Header(body='Guesses:', level=6), 'I N G K A T ', {'style_border': 'solid', 'style_height': '300px', 'style_width': '40%'}),
+              TextBox(name='guess', kind='text', default_value=''),
+              Button(text='Submit', url='/make_guess')]))
+
+assert_equal(
+ play_game(State(lives=5, guesses=['A', 'E', 'I', 'O', 'S', 'M', 'P', 'B', 'T', 'R'], word='IMPOSTER', progress=['I', 'M', 'P', 'O', 'S', 'T', 'E', 'R'], wins=2, streak=True, total_plays=3, mode='Intermediate', words_per_mode=[]), 'Easy'),
+ Page(state=State(lives=7,
+                 guesses=[],
+                 word='GRANA',
+                 progress=['_', '_', '_', '_', '_'],
+                 wins=2,
+                 streak=True,
+                 total_plays=3,
+                 mode='Easy',
+                 words_per_mode=[]),
+     content=["Let's play Hangman!!",
+              ,
+              Image(url='empty.png', width=None, height=None),
+              Div(Header(body='Guesses:', level=6), '', {'style_border': 'solid', 'style_height': '300px', 'style_width': '40%'}),
+              TextBox(name='guess', kind='text', default_value=''),
+              Button(text='Submit', url='/make_guess')]))
+
+assert_equal(
+ make_guess(State(lives=7, guesses=[], word='IMPOSTER', progress=['_', '_', '_', '_', '_', '_', '_', '_'], wins=1, streak=False, total_plays=2, mode='Intermediate', words_per_mode=[]), 'a'),
+ Page(state=State(lives=6,
+                 guesses=['A'],
+                 word='IMPOSTER',
+                 progress=['_', '_', '_', '_', '_', '_', '_', '_'],
+                 wins=1,
+                 streak=False,
+                 total_plays=2,
+                 mode='Intermediate',
+                 words_per_mode=[]),
+     content=["Let's play Hangman!!",
+              ,
+              Image(url='head.png', width=None, height=None),
+              Div(Header(body='Guesses:', level=6), 'A ', {'style_border': 'solid', 'style_height': '300px', 'style_width': '40%'}),
+              TextBox(name='guess', kind='text', default_value=''),
+              Button(text='Submit', url='/make_guess')]))
+
+assert_equal(
+ make_guess(State(lives=7, guesses=['I', 'N', 'G', 'K'], word='KVETCHING', progress=['K', '_', '_', '_', '_', '_', 'I', 'N', 'G'], wins=1, streak=True, total_plays=1, mode='Hard', words_per_mode=[]), 'a'),
+ Page(state=State(lives=6,
+                 guesses=['I', 'N', 'G', 'K', 'A'],
+                 word='KVETCHING',
+                 progress=['K', '_', '_', '_', '_', '_', 'I', 'N', 'G'],
+                 wins=1,
+                 streak=True,
+                 total_plays=1,
+                 mode='Hard',
+                 words_per_mode=[]),
+     content=["Let's play Hangman!!",
+              ,
+              Image(url='head.png', width=None, height=None),
+              Div(Header(body='Guesses:', level=6), 'I N G K A ', {'style_border': 'solid', 'style_height': '300px', 'style_width': '40%'}),
+              TextBox(name='guess', kind='text', default_value=''),
+              Button(text='Submit', url='/make_guess')]))
+
+assert_equal(
+ make_guess(State(lives=6, guesses=['A', 'E', 'I', 'O'], word='IMPOSTER', progress=['I', '_', '_', 'O', '_', '_', 'E', '_'], wins=1, streak=False, total_plays=2, mode='Intermediate', words_per_mode=[]), 's'),
+ Page(state=State(lives=6,
+                 guesses=['A', 'E', 'I', 'O', 'S'],
+                 word='IMPOSTER',
+                 progress=['I', '_', '_', 'O', 'S', '_', 'E', '_'],
+                 wins=1,
+                 streak=False,
+                 total_plays=2,
+                 mode='Intermediate',
+                 words_per_mode=[]),
+     content=["Let's play Hangman!!",
+              ,
+              Image(url='head.png', width=None, height=None),
+              Div(Header(body='Guesses:', level=6), 'A E I O S ', {'style_border': 'solid', 'style_height': '300px', 'style_width': '40%'}),
+              TextBox(name='guess', kind='text', default_value=''),
+              Button(text='Submit', url='/make_guess')]))
+
+assert_equal(
+ statistics(State(lives=7, guesses=['A', 'B', 'I', 'S'], word='BIAS', progress=['B', 'I', 'A', 'S'], wins=1, streak=True, total_plays=1, mode='Easy', words_per_mode=[]), 'Easy'),
+ Page(state=State(lives=7,
+                 guesses=['A', 'B', 'I', 'S'],
+                 word='BIAS',
+                 progress=['B', 'I', 'A', 'S'],
+                 wins=1,
+                 streak=True,
+                 total_plays=1,
+                 mode='Easy',
+                 words_per_mode=[]),
+     content=['You are on a roll!',
+              'You have played 1 game',
+              'You have won, 1 game',
+              SelectBox(name='mode', options=['Easy', 'Intermediate', 'Hard'], default_value=''),
+              Button(text='Play Again!', url='/play_game')]))
+
+assert_equal(
+ make_guess(State(lives=7, guesses=[], word='BIAS', progress=['_', '_', '_', '_'], wins=0, streak=False, total_plays=0, mode='Easy', words_per_mode=[]), 'a'),
+ Page(state=State(lives=7,
+                 guesses=['A'],
+                 word='BIAS',
+                 progress=['_', '_', 'A', '_'],
+                 wins=0,
+                 streak=False,
+                 total_plays=0,
+                 mode='Easy',
+                 words_per_mode=[]),
+     content=["Let's play Hangman!!",
+              ,
+              Image(url='empty.png', width=None, height=None),
+              Div(Header(body='Guesses:', level=6), 'A ', {'style_border': 'solid', 'style_height': '300px', 'style_width': '40%'}),
+              TextBox(name='guess', kind='text', default_value=''),
+              Button(text='Submit', url='/make_guess')]))
+
+assert_equal(
+ make_guess(State(lives=5, guesses=['A', 'E', 'I', 'O', 'S', 'M', 'P', 'B'], word='IMPOSTER', progress=['I', 'M', 'P', 'O', 'S', '_', 'E', '_'], wins=1, streak=False, total_plays=2, mode='Intermediate', words_per_mode=[]), 't'),
+ Page(state=State(lives=5,
+                 guesses=['A', 'E', 'I', 'O', 'S', 'M', 'P', 'B', 'T'],
+                 word='IMPOSTER',
+                 progress=['I', 'M', 'P', 'O', 'S', 'T', 'E', '_'],
+                 wins=1,
+                 streak=False,
+                 total_plays=2,
+                 mode='Intermediate',
+                 words_per_mode=[]),
+     content=["Let's play Hangman!!",
+              ,
+              Image(url='neck.png', width=None, height=None),
+              Div(Header(body='Guesses:', level=6), 'A E I O S M P B T ', {'style_border': 'solid', 'style_height': '300px', 'style_width': '40%'}),
+              TextBox(name='guess', kind='text', default_value=''),
+              Button(text='Submit', url='/make_guess')]))
+
+assert_equal(
+ make_guess(State(lives=7, guesses=['I', 'N'], word='KVETCHING', progress=['_', '_', '_', '_', '_', '_', 'I', 'N', '_'], wins=1, streak=True, total_plays=1, mode='Hard', words_per_mode=[]), 'g'),
+ Page(state=State(lives=7,
+                 guesses=['I', 'N', 'G'],
+                 word='KVETCHING',
+                 progress=['_', '_', '_', '_', '_', '_', 'I', 'N', 'G'],
+                 wins=1,
+                 streak=True,
+                 total_plays=1,
+                 mode='Hard',
+                 words_per_mode=[]),
+     content=["Let's play Hangman!!",
+              ,
+              Image(url='empty.png', width=None, height=None),
+              Div(Header(body='Guesses:', level=6), 'I N G ', {'style_border': 'solid', 'style_height': '300px', 'style_width': '40%'}),
+              TextBox(name='guess', kind='text', default_value=''),
+              Button(text='Submit', url='/make_guess')]))
+
+assert_equal(
+ play_game(State(lives=7, guesses=['A', 'B', 'I', 'S'], word='BIAS', progress=['B', 'I', 'A', 'S'], wins=1, streak=True, total_plays=1, mode='Easy', words_per_mode=[]), 'Hard'),
+ Page(state=State(lives=7,
+                 guesses=[],
+                 word='KVETCHING',
+                 progress=['_', '_', '_', '_', '_', '_', '_', '_', '_'],
+                 wins=1,
+                 streak=True,
+                 total_plays=1,
+                 mode='Hard',
+                 words_per_mode=[]),
+     content=["Let's play Hangman!!",
+              ,
+              Image(url='empty.png', width=None, height=None),
+              Div(Header(body='Guesses:', level=6), '', {'style_border': 'solid', 'style_height': '300px', 'style_width': '40%'}),
+              TextBox(name='guess', kind='text', default_value=''),
+              Button(text='Submit', url='/make_guess')]))
+
+assert_equal(
+ make_guess(State(lives=4, guesses=['I', 'N', 'G', 'K', 'A', 'T', 'B', 'P'], word='KVETCHING', progress=['K', '_', '_', 'T', '_', '_', 'I', 'N', 'G'], wins=1, streak=True, total_plays=1, mode='Hard', words_per_mode=[]), 'p'),
+ Page(state=State(lives=4,
+                 guesses=['I', 'N', 'G', 'K', 'A', 'T', 'B', 'P'],
+                 word='KVETCHING',
+                 progress=['K', '_', '_', 'T', '_', '_', 'I', 'N', 'G'],
+                 wins=1,
+                 streak=True,
+                 total_plays=1,
+                 mode='Hard',
+                 words_per_mode=[]),
+     content=["Let's play Hangman!!",
+              ,
+              Image(url='leftarm.png', width=None, height=None),
+              Div(Header(body='Guesses:', level=6), 'I N G K A T B P ', {'style_border': 'solid', 'style_height': '300px', 'style_width': '40%'}),
+              TextBox(name='guess', kind='text', default_value=''),
+              Button(text='Submit', url='/make_guess')]))
+
+assert_equal(
+ make_guess(State(lives=2, guesses=['I', 'N', 'G', 'K', 'A', 'T', 'B', 'P', 'S', 'L'], word='KVETCHING', progress=['K', '_', '_', 'T', '_', '_', 'I', 'N', 'G'], wins=1, streak=True, total_plays=1, mode='Hard', words_per_mode=[]), 'w'),
+ Page(state=State(lives=1,
+                 guesses=['I', 'N', 'G', 'K', 'A', 'T', 'B', 'P', 'S', 'L', 'W'],
+                 word='KVETCHING',
+                 progress=['K', '_', '_', 'T', '_', '_', 'I', 'N', 'G'],
+                 wins=1,
+                 streak=True,
+                 total_plays=1,
+                 mode='Hard',
+                 words_per_mode=[]),
+     content=["Let's play Hangman!!",
+              ,
+              Image(url='leftleg.png', width=None, height=None),
+              Div(Header(body='Guesses:', level=6), 'I N G K A T B P S L W ', {'style_border': 'solid', 'style_height': '300px', 'style_width': '40%'}),
+              TextBox(name='guess', kind='text', default_value=''),
+              Button(text='Submit', url='/make_guess')]))
+
+assert_equal(
+ make_guess(State(lives=5, guesses=['A', 'E', 'I', 'O', 'S', 'M', 'P', 'B', 'T'], word='IMPOSTER', progress=['I', 'M', 'P', 'O', 'S', 'T', 'E', '_'], wins=1, streak=False, total_plays=2, mode='Intermediate', words_per_mode=[]), 'r'),
+ Page(state=State(lives=5,
+                 guesses=['A', 'E', 'I', 'O', 'S', 'M', 'P', 'B', 'T', 'R'],
+                 word='IMPOSTER',
+                 progress=['I', 'M', 'P', 'O', 'S', 'T', 'E', 'R'],
+                 wins=2,
+                 streak=True,
+                 total_plays=3,
+                 mode='Intermediate',
+                 words_per_mode=[]),
+     content=['Congrats! You guessed the word:',
+              ,
+              Image(url='neck.png', width=None, height=None),
+              Div(Header(body='Guesses:', level=6), 'A E I O S M P B T R ', {'style_border': 'solid', 'style_height': '300px', 'style_width': '40%'}),
+              SelectBox(name='mode', options=['Easy', 'Intermediate', 'Hard'], default_value=''),
+              Button(text='Play Again!', url='/play_game'),
+              Button(text='Statistics', url='/statistics')]))
+
+assert_equal(
+ make_guess(State(lives=6, guesses=['A'], word='IMPOSTER', progress=['_', '_', '_', '_', '_', '_', '_', '_'], wins=1, streak=False, total_plays=2, mode='Intermediate', words_per_mode=[]), 'e'),
+ Page(state=State(lives=6,
+                 guesses=['A', 'E'],
+                 word='IMPOSTER',
+                 progress=['_', '_', '_', '_', '_', '_', 'E', '_'],
+                 wins=1,
+                 streak=False,
+                 total_plays=2,
+                 mode='Intermediate',
+                 words_per_mode=[]),
+     content=["Let's play Hangman!!",
+              ,
+              Image(url='head.png', width=None, height=None),
+              Div(Header(body='Guesses:', level=6), 'A E ', {'style_border': 'solid', 'style_height': '300px', 'style_width': '40%'}),
+              TextBox(name='guess', kind='text', default_value=''),
+              Button(text='Submit', url='/make_guess')]))
+
+assert_equal(
+ make_guess(State(lives=7, guesses=[], word='KVETCHING', progress=['_', '_', '_', '_', '_', '_', '_', '_', '_'], wins=1, streak=True, total_plays=1, mode='Hard', words_per_mode=[]), 'i'),
+ Page(state=State(lives=7,
+                 guesses=['I'],
+                 word='KVETCHING',
+                 progress=['_', '_', '_', '_', '_', '_', 'I', '_', '_'],
+                 wins=1,
+                 streak=True,
+                 total_plays=1,
+                 mode='Hard',
+                 words_per_mode=[]),
+     content=["Let's play Hangman!!",
+              ,
+              Image(url='empty.png', width=None, height=None),
+              Div(Header(body='Guesses:', level=6), 'I ', {'style_border': 'solid', 'style_height': '300px', 'style_width': '40%'}),
+              TextBox(name='guess', kind='text', default_value=''),
+              Button(text='Submit', url='/make_guess')]))
+
+assert_equal(
+ index(State(lives=7, guesses=[], word='', progress=[], wins=0, streak=False, total_plays=0, mode='', words_per_mode=[])),
+ Page(state=State(lives=7,
+                 guesses=[],
+                 word='',
+                 progress=[],
+                 wins=0,
+                 streak=False,
+                 total_plays=0,
+                 mode='',
+                 words_per_mode=[]),
+     content=[SelectBox(name='mode', options=['Easy', 'Intermediate', 'Hard'], default_value=''),
+              Button(text='Play Game!', url='/play_game'),
+              Image(url='splash_screen.jpg', width=None, height=None)]))
+
+assert_equal(
+ make_guess(State(lives=6, guesses=['I', 'N', 'G', 'K', 'A', 'T'], word='KVETCHING', progress=['K', '_', '_', 'T', '_', '_', 'I', 'N', 'G'], wins=1, streak=True, total_plays=1, mode='Hard', words_per_mode=[]), 'b'),
+ Page(state=State(lives=5,
+                 guesses=['I', 'N', 'G', 'K', 'A', 'T', 'B'],
+                 word='KVETCHING',
+                 progress=['K', '_', '_', 'T', '_', '_', 'I', 'N', 'G'],
+                 wins=1,
+                 streak=True,
+                 total_plays=1,
+                 mode='Hard',
+                 words_per_mode=[]),
+     content=["Let's play Hangman!!",
+              ,
+              Image(url='neck.png', width=None, height=None),
+              Div(Header(body='Guesses:', level=6), 'I N G K A T B ', {'style_border': 'solid', 'style_height': '300px', 'style_width': '40%'}),
+              TextBox(name='guess', kind='text', default_value=''),
+              Button(text='Submit', url='/make_guess')]))
+
+assert_equal(
+ make_guess(State(lives=6, guesses=['A', 'E', 'I', 'O', 'S'], word='IMPOSTER', progress=['I', '_', '_', 'O', 'S', '_', 'E', '_'], wins=1, streak=False, total_plays=2, mode='Intermediate', words_per_mode=[]), 'm'),
+ Page(state=State(lives=6,
+                 guesses=['A', 'E', 'I', 'O', 'S', 'M'],
+                 word='IMPOSTER',
+                 progress=['I', 'M', '_', 'O', 'S', '_', 'E', '_'],
+                 wins=1,
+                 streak=False,
+                 total_plays=2,
+                 mode='Intermediate',
+                 words_per_mode=[]),
+     content=["Let's play Hangman!!",
+              ,
+              Image(url='head.png', width=None, height=None),
+              Div(Header(body='Guesses:', level=6), 'A E I O S M ', {'style_border': 'solid', 'style_height': '300px', 'style_width': '40%'}),
+              TextBox(name='guess', kind='text', default_value=''),
+              Button(text='Submit', url='/make_guess')]))
+
+assert_equal(
+ make_guess(State(lives=5, guesses=['I', 'N', 'G', 'K', 'A', 'T', 'B'], word='KVETCHING', progress=['K', '_', '_', 'T', '_', '_', 'I', 'N', 'G'], wins=1, streak=True, total_plays=1, mode='Hard', words_per_mode=[]), 'p'),
+ Page(state=State(lives=4,
+                 guesses=['I', 'N', 'G', 'K', 'A', 'T', 'B', 'P'],
+                 word='KVETCHING',
+                 progress=['K', '_', '_', 'T', '_', '_', 'I', 'N', 'G'],
+                 wins=1,
+                 streak=True,
+                 total_plays=1,
+                 mode='Hard',
+                 words_per_mode=[]),
+     content=["Let's play Hangman!!",
+              ,
+              Image(url='leftarm.png', width=None, height=None),
+              Div(Header(body='Guesses:', level=6), 'I N G K A T B P ', {'style_border': 'solid', 'style_height': '300px', 'style_width': '40%'}),
+              TextBox(name='guess', kind='text', default_value=''),
+              Button(text='Submit', url='/make_guess')]))
+
+assert_equal(
+ make_guess(State(lives=6, guesses=['A', 'E'], word='IMPOSTER', progress=['_', '_', '_', '_', '_', '_', 'E', '_'], wins=1, streak=False, total_plays=2, mode='Intermediate', words_per_mode=[]), 'i'),
+ Page(state=State(lives=6,
+                 guesses=['A', 'E', 'I'],
+                 word='IMPOSTER',
+                 progress=['I', '_', '_', '_', '_', '_', 'E', '_'],
+                 wins=1,
+                 streak=False,
+                 total_plays=2,
+                 mode='Intermediate',
+                 words_per_mode=[]),
+     content=["Let's play Hangman!!",
+              ,
+              Image(url='head.png', width=None, height=None),
+              Div(Header(body='Guesses:', level=6), 'A E I ', {'style_border': 'solid', 'style_height': '300px', 'style_width': '40%'}),
+              TextBox(name='guess', kind='text', default_value=''),
+              Button(text='Submit', url='/make_guess')]))
+
+assert_equal(
+ make_guess(State(lives=1, guesses=['I', 'N', 'G', 'K', 'A', 'T', 'B', 'P', 'S', 'L', 'W'], word='KVETCHING', progress=['K', '_', '_', 'T', '_', '_', 'I', 'N', 'G'], wins=1, streak=True, total_plays=1, mode='Hard', words_per_mode=[]), 'q'),
+ Page(state=State(lives=0,
+                 guesses=['I', 'N', 'G', 'K', 'A', 'T', 'B', 'P', 'S', 'L', 'W', 'Q'],
+                 word='KVETCHING',
+                 progress=['K', '_', '_', 'T', '_', '_', 'I', 'N', 'G'],
+                 wins=1,
+                 streak=False,
+                 total_plays=2,
+                 mode='Hard',
+                 words_per_mode=[]),
+     content=['The word was KVETCHING',
+              'K _ _ T _ _ I N G ',
+              Image(url='rightleg.png', width=None, height=None),
+              Div(Header(body='Guesses:', level=6), 'I N G K A T B P S L W Q ', {'style_border': 'solid', 'style_height': '300px', 'style_width': '40%'}),
+              SelectBox(name='mode', options=['Easy', 'Intermediate', 'Hard'], default_value=''),
+              Button(text='Play Again!', url='/play_game'),
+              Button(text='Statistics', url='/statistics')]))
+
+assert_equal(
+ make_guess(State(lives=7, guesses=['A'], word='BIAS', progress=['_', '_', 'A', '_'], wins=0, streak=False, total_plays=0, mode='Easy', words_per_mode=[]), 'b'),
+ Page(state=State(lives=7,
+                 guesses=['A', 'B'],
+                 word='BIAS',
+                 progress=['B', '_', 'A', '_'],
+                 wins=0,
+                 streak=False,
+                 total_plays=0,
+                 mode='Easy',
+                 words_per_mode=[]),
+     content=["Let's play Hangman!!",
+              ,
+              Image(url='empty.png', width=None, height=None),
+              Div(Header(body='Guesses:', level=6), 'A B ', {'style_border': 'solid', 'style_height': '300px', 'style_width': '40%'}),
+              TextBox(name='guess', kind='text', default_value=''),
+              Button(text='Submit', url='/make_guess')]))
+
+assert_equal(
+ make_guess(State(lives=6, guesses=['A', 'E', 'I', 'O', 'S', 'M'], word='IMPOSTER', progress=['I', 'M', '_', 'O', 'S', '_', 'E', '_'], wins=1, streak=False, total_plays=2, mode='Intermediate', words_per_mode=[]), 'p'),
+ Page(state=State(lives=6,
+                 guesses=['A', 'E', 'I', 'O', 'S', 'M', 'P'],
+                 word='IMPOSTER',
+                 progress=['I', 'M', 'P', 'O', 'S', '_', 'E', '_'],
+                 wins=1,
+                 streak=False,
+                 total_plays=2,
+                 mode='Intermediate',
+                 words_per_mode=[]),
+     content=["Let's play Hangman!!",
+              ,
+              Image(url='head.png', width=None, height=None),
+              Div(Header(body='Guesses:', level=6), 'A E I O S M P ', {'style_border': 'solid', 'style_height': '300px', 'style_width': '40%'}),
+              TextBox(name='guess', kind='text', default_value=''),
+              Button(text='Submit', url='/make_guess')]))
+
+assert_equal(
+ make_guess(State(lives=4, guesses=['I', 'N', 'G', 'K', 'A', 'T', 'B', 'P'], word='KVETCHING', progress=['K', '_', '_', 'T', '_', '_', 'I', 'N', 'G'], wins=1, streak=True, total_plays=1, mode='Hard', words_per_mode=[]), 's'),
+ Page(state=State(lives=3,
+                 guesses=['I', 'N', 'G', 'K', 'A', 'T', 'B', 'P', 'S'],
+                 word='KVETCHING',
+                 progress=['K', '_', '_', 'T', '_', '_', 'I', 'N', 'G'],
+                 wins=1,
+                 streak=True,
+                 total_plays=1,
+                 mode='Hard',
+                 words_per_mode=[]),
+     content=["Let's play Hangman!!",
+              ,
+              Image(url='rightarm.png', width=None, height=None),
+              Div(Header(body='Guesses:', level=6), 'I N G K A T B P S ', {'style_border': 'solid', 'style_height': '300px', 'style_width': '40%'}),
+              TextBox(name='guess', kind='text', default_value=''),
+              Button(text='Submit', url='/make_guess')]))
