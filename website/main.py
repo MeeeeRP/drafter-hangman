@@ -3,7 +3,7 @@ from drafter import *
 from dataclasses import dataclass
 import random
 
-#hide_debug_information()
+hide_debug_information()
 set_website_title("Hangman!!!")
 set_website_framed(False)
 
