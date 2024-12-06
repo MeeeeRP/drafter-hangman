@@ -1,7 +1,7 @@
 from bakery import assert_equal
 from drafter import *
 from dataclasses import dataclass
-import requests
+#import requests
 #from word_list import easy, medium, hard
 import random
 
@@ -40,9 +40,10 @@ def make_str(this_list: list[str]) -> str:
     return this_str
 
 def get_lists(state: State, mode: str) -> list[str]:
-    response = requests.get('https://raw.githubusercontent.com/RazorSh4rk/random-word-api/refs/heads/master/words.json')
-    print(str(len(response.text))+" "+response.text)
-    words = [w.strip(' "') for w in response.text.split(',')]
+    #response = requests.get('https://raw.githubusercontent.com/RazorSh4rk/random-word-api/refs/heads/master/words.json')
+    #print(str(len(response.text))+" "+response.text)
+    words_file = open('words.txt')
+    words = [w.strip(' "') for w in words_file.read().split(',')]
     if mode=='Easy':
         easy = [word for word in words if len(word)<=5]
         print('easy assigned: '+str(len(easy)))
