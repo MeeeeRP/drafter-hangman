@@ -21,4 +21,4 @@ Link to [Planning Document](hangman-planning.pdf)
 
 ## Video URL
 
-<Replace this with the URL to your video. Make sure you keep the angle brackets around the URL.>
+<[Hear my voice!!! (I explain how to play the game)](https://youtu.be/tuMzTpHKxM8)>
